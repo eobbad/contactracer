@@ -47,6 +47,7 @@ public class WarningFragment extends Fragment {
         //return inflater.inflate(R.layout.fragment_posts, container, false);
 
         View view = inflater.inflate(R.layout.fragment_warning, container, false);
+
         // Lookup the swipe container view
         return view;
     }
@@ -55,11 +56,12 @@ public class WarningFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
 
+
         super.onViewCreated(view, savedInstanceState);
         rvWarnings = view.findViewById(R.id.rvWarnings);
 
         allWarnings = new ArrayList<>();
-        WarningsAdapter adapter = new WarningsAdapter(getContext(), allWarnings);
+        adapter = new WarningsAdapter(getContext(), allWarnings);
 
         rvWarnings.setAdapter(adapter);
         rvWarnings.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -76,7 +78,7 @@ public class WarningFragment extends Fragment {
             @Override
             public void done(List<Warning> warnings, ParseException e) {
                 if(e != null){
-                    Log.e(TAG, "issue with getting posts", e);
+                    Log.e(TAG, "issue with getting warnings", e);
                     return;
                 }
                 for (Warning warning : warnings){
