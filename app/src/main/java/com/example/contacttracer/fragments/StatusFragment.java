@@ -26,6 +26,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,6 @@ public class StatusFragment extends Fragment implements AdapterView.OnItemSelect
 
     public static final String TAG = "StatusFragment";
     private Spinner sChangeStatus;
-    private Button BtnStatus;
 
     public StatusFragment() {
         // Required empty public constructor
@@ -65,7 +65,6 @@ public class StatusFragment extends Fragment implements AdapterView.OnItemSelect
 
         //for now I will only have "positive" and "negative" options
         sChangeStatus = view.findViewById(R.id.sChangeStatus);
-        BtnStatus = view.findViewById(R.id.BtnStatus);
 
         //creating the drop down menu
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.status, android.R.layout.simple_spinner_item);
@@ -73,10 +72,36 @@ public class StatusFragment extends Fragment implements AdapterView.OnItemSelect
         sChangeStatus.setAdapter(adapter);
 
         sChangeStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
+
+
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
+
                 String text = parent.getItemAtPosition(position).toString();
-                Toast.makeText(parent.getContext(),text, Toast.LENGTH_SHORT).show();
+                Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
+
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                setStatus(text, currentUser);
+            }
+
+            private void setStatus(String text, ParseUser currentUser) {
+                //create a warning for this user if they test positive
+                Warning warning = new Warning();
+                //for now this is hard-coded, might add length of interaction as stretch feature
+                warning.setDescription("Close contact with a person infected with COVID-19");
+                //hardcoded, will get location from maps sdk
+                warning.setLocation("Manhattan Beach, CA");
+                warning.setUser(currentUser);
+               // warning.setImage(null);
+                warning.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if( e != null){
+                            Log.e(TAG, "Error while saving", e);
+                            Toast.makeText(getContext(), "Error while saving!", Toast.LENGTH_SHORT).show();
+                        }
+                        Log.i(TAG, "Warning save was successful!!");
+                    }
+                });
             }
 
             @Override
@@ -89,27 +114,12 @@ public class StatusFragment extends Fragment implements AdapterView.OnItemSelect
 
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
-
-        String text = parent.getItemAtPosition(position).toString();
-        Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
-
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        setStatus(text, currentUser);
-
-
-    }
-
-    private void setStatus(String text, ParseUser currentUser) {
-        //create a warning for this user if they test positive
-        Warning warning = new Warning();
-        //for now this is hard-coded, might add length of interaction as stretch feature
-        warning.setDescription("Close contact with a person infected with COVID-19");
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
+    public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
 }
