@@ -12,8 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 
@@ -31,7 +33,7 @@ import java.util.List;
 public class StatusFragment extends Fragment {
 
     public static final String TAG = "StatusFragment";
-    private EditText etDescription;
+    private Spinner etDescription;
     private Button BtnStatus;
 
     public StatusFragment() {
@@ -64,21 +66,9 @@ public class StatusFragment extends Fragment {
         etDescription = view.findViewById(R.id.etDescription);
         BtnStatus = view.findViewById(R.id.BtnStatus);
 
-        BtnStatus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String description = etDescription.getText().toString();
-
-                if(description.isEmpty()){
-                    Toast.makeText(getContext(), "Description cannot be empty", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-
-                ParseUser currentUser = ParseUser.getCurrentUser();
-
-            }
-        });
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.status, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        etDescription.setAdapter(adapter);
 
 
     }
