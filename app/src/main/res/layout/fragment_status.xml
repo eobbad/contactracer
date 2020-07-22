@@ -10,15 +10,15 @@
     android:layout_height="match_parent"
     tools:context=".fragments.StatusFragment">
 
-    <EditText
+    <Spinner
         android:id="@+id/etDescription"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="71dp"
         android:ems="10"
-        android:hint="Status..." />
+         />
 
     <Button
         android:id="@+id/BtnStatus"
