@@ -34,7 +34,7 @@ import java.util.List;
 public class StatusFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     public static final String TAG = "StatusFragment";
-    private Spinner etDescription;
+    private Spinner sChangeStatus;
     private Button BtnStatus;
 
     public StatusFragment() {
@@ -61,18 +61,29 @@ public class StatusFragment extends Fragment implements AdapterView.OnItemSelect
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
 
-
         super.onViewCreated(view, savedInstanceState);
 
-        etDescription = view.findViewById(R.id.etDescription);
+        //for now I will only have "positive" and "negative" options
+        sChangeStatus = view.findViewById(R.id.sChangeStatus);
         BtnStatus = view.findViewById(R.id.BtnStatus);
 
+        //creating the drop down menu
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.status, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        etDescription.setAdapter(adapter);
+        sChangeStatus.setAdapter(adapter);
 
-        etDescription.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) getContext());
+        sChangeStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                String text = parent.getItemAtPosition(position).toString();
+                Toast.makeText(parent.getContext(),text, Toast.LENGTH_SHORT).show();
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
     }
 
@@ -82,6 +93,19 @@ public class StatusFragment extends Fragment implements AdapterView.OnItemSelect
 
         String text = parent.getItemAtPosition(position).toString();
         Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
+
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        setStatus(text, currentUser);
+
+
+    }
+
+    private void setStatus(String text, ParseUser currentUser) {
+        //create a warning for this user if they test positive
+        Warning warning = new Warning();
+        //for now this is hard-coded, might add length of interaction as stretch feature
+        warning.setDescription("Close contact with a person infected with COVID-19");
+
     }
 
     @Override
