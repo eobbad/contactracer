@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class StatusFragment extends Fragment {
+public class StatusFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     public static final String TAG = "StatusFragment";
     private Spinner etDescription;
@@ -70,8 +71,21 @@ public class StatusFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         etDescription.setAdapter(adapter);
 
+        etDescription.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) getContext());
+
 
     }
 
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
+
+        String text = parent.getItemAtPosition(position).toString();
+        Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }
