@@ -22,6 +22,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.parse.FindCallback;
@@ -31,7 +32,7 @@ import com.parse.ParseUser;
 
 import java.util.List;
 
-public class HistoryFragment extends Fragment implements OnMapReadyCallback {
+public class HistoryFragment extends Fragment  {
 
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -73,6 +74,10 @@ public class HistoryFragment extends Fragment implements OnMapReadyCallback {
                     currentLocation = location;
                     Toast.makeText(getContext(), currentLocation.getLatitude()+ " "+
                             currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
+                    SupportMapFragment supportMapFragment = (SupportMapFragment)
+                            getChildFragmentManager().findFragmentById(R.id.google_map);
+                    SupportMapFragment.getMapAsync(getContext());
+
                 }
             }
         });

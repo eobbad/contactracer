@@ -8,12 +8,11 @@
 
 
 
-        <fragment
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/google_map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-                />
+            android:layout_height="match_parent" />
+
 
 
 </RelativeLayout>
