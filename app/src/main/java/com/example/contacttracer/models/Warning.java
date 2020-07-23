@@ -57,11 +57,10 @@ public class Warning extends ParseObject{
     }
 
     //temporary method
-    public String getLocation(){return "Long Beach, CA";}
+    public ParseObject getLocation(){return getParseObject(KEY_LOCATION);}
     public void setLocation(String location){
         put(KEY_LOCATION, location);
     }
-
 
 
     //temporary method
