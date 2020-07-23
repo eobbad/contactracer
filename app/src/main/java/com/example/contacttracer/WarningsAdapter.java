@@ -73,7 +73,7 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
             tvUsername.setText(warning.getUser().getUsername());
             //I will have to do more logic to find the time the two users came in contact
             tvTimeStamp.setText("Saturday");
-            tvLocation.setText(warning.getLocation());
+            //tvLocation.setText(warning.getLocation());
 
 
         }
