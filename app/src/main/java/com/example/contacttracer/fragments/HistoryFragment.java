@@ -26,7 +26,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 public class HistoryFragment extends Fragment{
 
     //I have to use a mapView instead of a
@@ -40,46 +39,34 @@ public class HistoryFragment extends Fragment{
         //return inflater.inflate(R.layout.fragment_posts, container, false)
 
         View view = inflater.inflate(R.layout.fragment_history, container, false);
-
-
         mMapView = (MapView) view.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
-
         mMapView.onResume(); // needed to get the map to display immediately
-
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
-
                 // For showing a move to my location button
                 //permission check
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
                     System.out.println("map not accessbile");
-
-
                     return;
                 }
                 googleMap.setMyLocationEnabled(true);
-
                 // For dropping a marker at a point on the Map
                 LatLng sydney = new LatLng(-34, 151);
                 googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
-
                 // For zooming automatically to the location of the marker
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
-
-
         // Lookup the swipe container view
         return view;
     }
@@ -107,10 +94,6 @@ public class HistoryFragment extends Fragment{
         super.onLowMemory();
         mMapView.onLowMemory();
     }
-
-
-
-
 }
 
 

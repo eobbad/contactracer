@@ -4,12 +4,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.contacttracer.models.Warning;
-
 import java.util.List;
 
 public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHolder>{
@@ -45,13 +42,10 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder implements com.example.contacttracer.ViewHolder {
 
-        //
         private TextView tvUsername;
         private TextView tvDescription;
         private TextView tvTimeStamp;
         private TextView tvLocation;
-
-
 
         public ViewHolder(@NonNull View itemView) {
 
@@ -64,8 +58,6 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
 
         }
 
-
-
         public void bind(Warning warning) {
 
             //for now I will keep the description to same for all warnings
@@ -74,8 +66,6 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
             //I will have to do more logic to find the time the two users came in contact
             tvTimeStamp.setText("Saturday");
             //tvLocation.setText(warning.getLocation());
-
-
         }
 
     }

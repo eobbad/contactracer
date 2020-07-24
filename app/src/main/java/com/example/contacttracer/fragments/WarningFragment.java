@@ -31,41 +31,28 @@ public class WarningFragment extends Fragment {
     private RecyclerView rvWarnings;
     protected WarningsAdapter adapter;
     protected List<Warning> allWarnings;
-
     public WarningFragment() {
         // Required empty public constructor
     }
-
-
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_posts, container, false);
-
         View view = inflater.inflate(R.layout.fragment_warning, container, false);
-
         // Lookup the swipe container view
         return view;
     }
 
-
-
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
-
 
         super.onViewCreated(view, savedInstanceState);
         rvWarnings = view.findViewById(R.id.rvWarnings);
-
         allWarnings = new ArrayList<>();
         adapter = new WarningsAdapter(getContext(), allWarnings);
-
         rvWarnings.setAdapter(adapter);
         rvWarnings.setLayoutManager(new LinearLayoutManager(getContext()));
-
         queryWarnings();
     }
 

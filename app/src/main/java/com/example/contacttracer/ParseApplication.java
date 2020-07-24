@@ -1,7 +1,5 @@
 package com.example.contacttracer;
-
 import android.app.Application;
-
 import com.example.contacttracer.models.Warning;
 import com.parse.Parse;
 import com.parse.ParseObject;

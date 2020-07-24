@@ -1,5 +1,4 @@
 package com.example.contacttracer;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Service;
@@ -14,7 +13,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
-
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
