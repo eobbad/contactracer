@@ -17,9 +17,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.contacttracer.R;
-import com.example.contacttracer.models.Warning;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -29,19 +26,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
-import java.util.List;
-
-public class HistoryFragment extends Fragment  {
+public class HistoryFragment extends Fragment{
 
     //I have to use a mapView instead of a
-    MapView mMapView;
+    private MapView mMapView;
     private GoogleMap googleMap;
 
     @Override
@@ -70,6 +59,14 @@ public class HistoryFragment extends Fragment  {
                 googleMap = mMap;
 
                 // For showing a move to my location button
+                //permission check
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                    System.out.println("map not accessbile");
+
+
+                    return;
+                }
                 googleMap.setMyLocationEnabled(true);
 
                 // For dropping a marker at a point on the Map
@@ -87,7 +84,33 @@ public class HistoryFragment extends Fragment  {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
+    }
 
 
-   
+
+
 }
+
+
