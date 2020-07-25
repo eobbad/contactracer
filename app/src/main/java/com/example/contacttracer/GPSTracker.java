@@ -16,6 +16,8 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class GPSTracker extends Service implements LocationListener {
 
     private final Context mContext;

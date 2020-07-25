@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.contacttracer.GPSTracker;
 import com.example.contacttracer.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -60,10 +61,16 @@ public class HistoryFragment extends Fragment{
                 }
                 googleMap.setMyLocationEnabled(true);
                 // For dropping a marker at a point on the Map
-                LatLng sydney = new LatLng(-34, 151);
-                googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+                //get my location(which is updated every minute
+                GPSTracker gpsTracker = new GPSTracker(getContext());
+                Double myLat = gpsTracker.getLatitude();
+                Double myLong = gpsTracker.getLongitude();
+
+                System.out.println("Lat: "+myLat + "Long" + myLong);
+                LatLng myLocation = new LatLng(myLat, myLong);
+                googleMap.addMarker(new MarkerOptions().position(myLocation).title("Marker Title").snippet("Marker Description"));
                 // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(myLocation).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
