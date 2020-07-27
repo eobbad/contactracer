@@ -12,6 +12,8 @@ import com.example.contacttracer.fragments.HistoryFragment;
 import com.example.contacttracer.fragments.StatusFragment;
 import com.example.contacttracer.fragments.WarningFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -20,6 +22,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
@@ -33,9 +38,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         saveCurrentUserLocation();
 
+        //Parse method that shows users close to you(within 100 miles I believe)
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereNear("Location", getCurrentUserLocation());
-
+        //nearUsers should display the users that are close to the current user
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @Override  public void done(List<ParseUser> nearUsers, ParseException e) {
+                if (e == null) {
+                    // do something with the list of results of your query
+                } else {
+                    // handle the error
+                }
+            }
+        });
+        ParseQuery.clearAllCachedResults();
+        
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -112,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
 
         // finding currentUser
         ParseUser currentUser = ParseUser.getCurrentUser();
-
         if (currentUser == null) {
             // if it's not possible to find the user, do something like returning to login activity
         }
