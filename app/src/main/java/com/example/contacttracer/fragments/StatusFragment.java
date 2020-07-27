@@ -13,7 +13,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.contacttracer.R;
 import com.example.contacttracer.models.Warning;
@@ -28,6 +30,10 @@ public class StatusFragment extends Fragment implements AdapterView.OnItemSelect
 
     public static final String TAG = "StatusFragment";
     private Spinner sChangeStatus;
+    private ImageView ivProfile;
+    private TextView tvUsername;
+    private TextView tvLocation;
+
     public StatusFragment() {
         // Required empty public constructor
     }
@@ -49,6 +55,12 @@ public class StatusFragment extends Fragment implements AdapterView.OnItemSelect
         super.onViewCreated(view, savedInstanceState);
         //for now I will only have "positive" and "negative" options
         sChangeStatus = view.findViewById(R.id.sChangeStatus);
+        ivProfile = view.findViewById(R.id.ivProfile);
+        tvUsername = view.findViewById(R.id.tvUsername);
+        tvLocation = view.findViewById(R.id.tvLocation);
+
+        tvUsername.setText(ParseUser.getCurrentUser().getUsername());
+        
         //creating the drop down menu
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.status, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
