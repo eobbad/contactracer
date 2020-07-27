@@ -13,6 +13,7 @@ import com.example.contacttracer.fragments.StatusFragment;
 import com.example.contacttracer.fragments.WarningFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         saveCurrentUserLocation();
+
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.whereNear("Location", getCurrentUserLocation());
+
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -100,6 +105,20 @@ public class MainActivity extends AppCompatActivity {
                 // if it is null, do something like displaying error and coming back to the menu activity
             }
         }
+    }
+
+    //gets parse Geopoint from the current user
+    private ParseGeoPoint getCurrentUserLocation(){
+
+        // finding currentUser
+        ParseUser currentUser = ParseUser.getCurrentUser();
+
+        if (currentUser == null) {
+            // if it's not possible to find the user, do something like returning to login activity
+        }
+        // otherwise, return the current user location
+        return currentUser.getParseGeoPoint("Location");
+
     }
 
     @Override
