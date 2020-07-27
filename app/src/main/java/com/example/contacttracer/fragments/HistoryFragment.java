@@ -24,9 +24,18 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
+import java.util.List;
+
 public class HistoryFragment extends Fragment{
 
     //I have to use a mapView instead of a
@@ -68,7 +77,38 @@ public class HistoryFragment extends Fragment{
 
                 System.out.println("Lat: "+myLat + "Long" + myLong);
                 LatLng myLocation = new LatLng(myLat, myLong);
-                googleMap.addMarker(new MarkerOptions().position(myLocation).title("Marker Title").snippet("Marker Description"));
+
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                ParseQuery<ParseUser> query = ParseUser.getQuery();
+
+                final ParseGeoPoint currentLocation = currentUser.getParseGeoPoint("Location");
+                query.whereNear("Location", currentLocation);
+
+                query.findInBackground(new FindCallback<ParseUser>() {
+                    @Override  public void done(List<ParseUser> nearUsers, ParseException e) {
+                        if (e == null) {
+                            // avoiding null pointer
+                            ParseUser closestUser = ParseUser.getCurrentUser();
+                            // set the closestUser to the one that isn't the current user
+                            for(int i = 0; i < nearUsers.size(); i++) {
+                                if(!nearUsers.get(i).getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                                    closestUser = nearUsers.get(i);
+                                }
+                            }
+                            // finding and displaying the distance between the current user and the closest user to him
+                            double distance = currentLocation.distanceInKilometersTo(closestUser.getParseGeoPoint("Location"));
+                            // creating a marker in the map showing the closest user to the current user location
+                            LatLng closestUserLocation = new LatLng(closestUser.getParseGeoPoint("Location").getLatitude(), closestUser.getParseGeoPoint("Location").getLongitude());
+
+                            googleMap.addMarker(new MarkerOptions().position(closestUserLocation).icon(BitmapDescriptorFactory
+                                    .defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                        } else {
+                            Log.d("store", "Error: " + e.getMessage());
+                        }
+                    }
+                });
+
+                //googleMap.addMarker(new MarkerOptions().position(myLocation).title("Marker Title").snippet("Marker Description"));
                 // For zooming automatically to the location of the marker
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(myLocation).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -77,6 +117,7 @@ public class HistoryFragment extends Fragment{
         // Lookup the swipe container view
         return view;
     }
+
 
     @Override
     public void onResume() {
@@ -101,6 +142,7 @@ public class HistoryFragment extends Fragment{
         super.onLowMemory();
         mMapView.onLowMemory();
     }
+
 }
 
 

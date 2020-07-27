@@ -37,22 +37,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         saveCurrentUserLocation();
-
-        //Parse method that shows users close to you(within 100 miles I believe)
-        ParseQuery<ParseUser> query = ParseUser.getQuery();
-        query.whereNear("Location", getCurrentUserLocation());
-        //nearUsers should display the users that are close to the current user
-        query.findInBackground(new FindCallback<ParseUser>() {
-            @Override  public void done(List<ParseUser> nearUsers, ParseException e) {
-                if (e == null) {
-                    // do something with the list of results of your query
-                } else {
-                    // handle the error
-                }
-            }
-        });
-        ParseQuery.clearAllCachedResults();
-        
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -147,4 +131,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+
+
 }
