@@ -1,4 +1,6 @@
 package com.example.contacttracer.fragments;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.contacttracer.GPSTracker;
 import com.example.contacttracer.R;
 import com.example.contacttracer.models.Warning;
 import com.parse.FindCallback;
@@ -24,8 +28,12 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
 public class StatusFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     public static final String TAG = "StatusFragment";
@@ -60,7 +68,15 @@ public class StatusFragment extends Fragment implements AdapterView.OnItemSelect
         tvLocation = view.findViewById(R.id.tvLocation);
 
         tvUsername.setText(ParseUser.getCurrentUser().getUsername());
-        
+        GPSTracker gpsTracker = new GPSTracker(getContext());
+        Double myLat = gpsTracker.getLatitude();
+        Double myLong = gpsTracker.getLongitude();
+        try {
+            tvLocation.setText(getCityName(myLat,myLong));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         //creating the drop down menu
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.status, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -110,5 +126,25 @@ public class StatusFragment extends Fragment implements AdapterView.OnItemSelect
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    public String getCityName(Double latitude, Double longitude) throws IOException {
+
+        String result = null;
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        try {
+            List<Address> list = geocoder.getFromLocation(
+                    latitude, longitude, 1);
+            if (list != null && list.size() > 0) {
+                Address address = list.get(0);
+                // sending back first address line and locality
+
+                result = address.getAddressLine(0) + ", " + address.getLocality();
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Impossible to connect to Geocoder", e);
+        }
+
+        return result;
     }
 }
