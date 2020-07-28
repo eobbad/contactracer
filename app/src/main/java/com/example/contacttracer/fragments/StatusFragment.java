@@ -35,6 +35,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.contacttracer.GPSTracker;
 import com.example.contacttracer.R;
 import com.example.contacttracer.models.Warning;
@@ -54,6 +55,7 @@ import java.util.Locale;
 
 public class StatusFragment extends Fragment {
 
+    ParseUser currentUser = ParseUser.getCurrentUser();
     public static final String TAG = "StatusFragment";
     private Spinner sChangeStatus;
     private ImageView ivProfile;
@@ -94,6 +96,8 @@ public class StatusFragment extends Fragment {
         tvLocation = view.findViewById(R.id.tvLocation);
         btnChangeProfile = view.findViewById(R.id.BtnChangeProfile);
 
+        loadImage();
+
         btnChangeProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,9 +107,8 @@ public class StatusFragment extends Fragment {
                     Toast.makeText(getContext(), "There is no image", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                ParseUser currentUser = ParseUser.getCurrentUser();
-                currentUser.put("Image", new ParseFile(photoFile));
-                currentUser.saveInBackground();
+                saveImage(photoFile);
+
             }
         });
         //creating the drop down menu
@@ -161,6 +164,26 @@ public class StatusFragment extends Fragment {
             e.printStackTrace();
         }
 
+    }
+
+    private void loadImage() {
+
+        ParseFile image = currentUser.getParseFile("Image");
+
+        if(image != null){
+            Glide.with(getContext()).load(image.getUrl()).into(ivProfile);
+        }
+    }
+
+    public void saveImage(File photoFile){
+
+        ParseFile profilePic = new ParseFile(photoFile);
+        if (currentUser != null) {
+            currentUser.put("Image", profilePic);
+            currentUser.saveInBackground();
+        } else {
+            // do something like coming back to the login activity
+        }
     }
 
     private void launchCamera() {
@@ -235,13 +258,4 @@ public class StatusFragment extends Fragment {
         return result;
     }
 
-    public void saveImage(ParseUser currentUser, File photoFile){
-
-        if (currentUser != null) {
-            currentUser.put("Image", new ParseFile(photoFile));
-            currentUser.saveInBackground();
-        } else {
-            // do something like coming back to the login activity
-        }
-    }
 }
