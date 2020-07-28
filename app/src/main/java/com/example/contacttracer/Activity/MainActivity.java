@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
             GPSTracker gpsTracker = new GPSTracker(this);
             Double myLat = gpsTracker.getLatitude();
             Double myLong = gpsTracker.getLongitude();
+            System.out.println(myLat + "" + myLong);
             // checking if the location is null
             if(myLat != null && myLong != null){
                 // if it isn't, save it to Back4App Dashboard
