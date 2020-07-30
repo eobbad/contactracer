@@ -101,7 +101,7 @@ public class HistoryFragment extends Fragment{
                             LatLng closestUserLocation = new LatLng(closestUser.getParseGeoPoint("Location").getLatitude(), closestUser.getParseGeoPoint("Location").getLongitude());
 
                             googleMap.addMarker(new MarkerOptions().position(closestUserLocation).icon(BitmapDescriptorFactory
-                                    .defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                                    .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
                         } else {
                             Log.d("store", "Error: " + e.getMessage());
                         }

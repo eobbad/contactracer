@@ -8,7 +8,8 @@
     android:layout_height="match_parent"
     android:layout_margin="16dp"
     android:orientation="vertical"
-    tools:context=".fragments.StatusFragment">
+    tools:context=".fragments.StatusFragment"
+    android:background="@drawable/my_gradient_drawable">
 
     <Spinner
         android:id="@+id/sChangeStatus"
@@ -42,7 +43,8 @@
         android:layout_alignParentStart="true"
         android:layout_marginStart="12dp"
         android:layout_marginTop="40dp"
-        android:text="Long Beach, CA" />
+        android:text="Long Beach, CA"
+        android:textColor="@android:color/white" />
 
     <TextView
         android:id="@+id/tvUsername"
@@ -52,7 +54,8 @@
         android:layout_alignParentStart="true"
         android:layout_marginStart="15dp"
         android:layout_marginTop="44dp"
-        android:text="Username" />
+        android:text="Username"
+        android:textColor="@android:color/white" />
 
     <Button
         android:id="@+id/BtnChangeProfile"

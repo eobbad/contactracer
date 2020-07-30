@@ -5,21 +5,17 @@
     <item
         android:id="@+id/action_warning"
         android:title="Warnings"
-        android:icon="@drawable/ic_baseline_warning_24"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_history"
         android:title="History"
-        android:icon="@drawable/ic_baseline_list_24"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_status"
         android:title="Status"
-        android:icon="@drawable/ic_baseline_add_circle_24"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_logOut"
-        android:icon="@android:drawable/ic_menu_revert"
         android:title="Log Out"
         app:showAsAction="always" />
 </menu>
