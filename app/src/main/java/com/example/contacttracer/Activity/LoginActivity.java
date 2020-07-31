@@ -50,30 +50,18 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "onClick signup button");
-                String username = etUsername.getText().toString();
-                String password = etPassword.getText().toString();
-                signupUser(username, password);
+                //String username = etUsername.getText().toString();
+                //String password = etPassword.getText().toString();
+                gosignupActivity();
             }
         });
     }
 
-    private void signupUser(String username, String password) {
-        // Create the ParseUser
-        ParseUser user = new ParseUser();
-        // Set core properties
-        user.setUsername(username);
-        user.setPassword(password);
-        user.signUpInBackground(new SignUpCallback() {
-            public void done(ParseException e) {
-                if (e == null) {
-                    // Hooray! Let them use the app now.
-                } else {
-                    // Sign up didn't succeed. Look at the ParseException
-                    // to figure out what went wrong
-                }
-            }
-        });
-        loginUser(username, password);
+    private void gosignupActivity() {
+
+        Intent i = new Intent(this, SignupActivity.class);
+        startActivity(i);
+        finish();
     }
 
     private void loginUser(String username, String password) {
