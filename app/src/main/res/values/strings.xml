@@ -6,8 +6,8 @@
     <string name="map_key" translatable="false">AIzaSyAETitn22FMIFA2f991-nQAVrz4BtyCBQI</string>
 
     <string-array name="status">
-        <item>Positive</item>
         <item>Negative</item>
+        <item>Positive</item>
 
     </string-array>
 </resources>

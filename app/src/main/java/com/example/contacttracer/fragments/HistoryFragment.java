@@ -88,27 +88,40 @@ public class HistoryFragment extends Fragment{
                 ParseQuery<ParseUser> query = ParseUser.getQuery();
 
                 final ParseGeoPoint currentLocation = currentUser.getParseGeoPoint("Location");
-                query.whereNear("Location", currentLocation);
+                System.out.println("but ehre");
 
+                query.whereNear("Location", currentLocation);
+                System.out.println("Not here");
                 query.findInBackground(new FindCallback<ParseUser>() {
                     @Override  public void done(List<ParseUser> nearUsers, ParseException e) {
                         if (e == null) {
                             // avoiding null pointer
-                            ParseUser closestUser = ParseUser.getCurrentUser();
                             tvMessage.setText("There are " + nearUsers.size() + " users nearby");
                             // set the closestUser to the one that isn't the current user
                             for(int i = 0; i < nearUsers.size(); i++) {
-                                if(!nearUsers.get(i).getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
-                                    closestUser = nearUsers.get(i);
+
+                                ParseUser thisUser = nearUsers.get(i);
+                                ParseGeoPoint thisUserLocation = thisUser.getParseGeoPoint("Location");
+                                //if this user is not the current user
+                                if(!thisUser.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+
+                                    System.out.println("1");
+                                    //if this user is within 15 miles(or 24 km) from the current user
+                                    if(currentLocation.distanceInKilometersTo(thisUserLocation)<=24.0){
+                                        //if this user is infected
+                                        System.out.println("2");
+
+                                        if(thisUser.getString("status").equals("Positive")){
+                                            System.out.println("put user");
+                                            LatLng thisUserLatLng = new LatLng(thisUserLocation.getLatitude(), thisUserLocation.getLongitude());
+                                            googleMap.addMarker(new MarkerOptions().position(thisUserLatLng).icon(BitmapDescriptorFactory
+                                                    .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                                        }
+                                    }
                                 }
                             }
-                            // finding and displaying the distance between the current user and the closest user to him
-                            double distance = currentLocation.distanceInKilometersTo(closestUser.getParseGeoPoint("Location"));
-                            // creating a marker in the map showing the closest user to the current user location
-                            LatLng closestUserLocation = new LatLng(closestUser.getParseGeoPoint("Location").getLatitude(), closestUser.getParseGeoPoint("Location").getLongitude());
 
-                            googleMap.addMarker(new MarkerOptions().position(closestUserLocation).icon(BitmapDescriptorFactory
-                                    .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
                         } else {
                             Log.d("store", "Error: " + e.getMessage());
                         }

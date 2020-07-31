@@ -74,7 +74,6 @@ public class StatusFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -95,6 +94,7 @@ public class StatusFragment extends Fragment {
         tvUsername = view.findViewById(R.id.tvUsername);
         tvLocation = view.findViewById(R.id.tvLocation);
         btnChangeProfile = view.findViewById(R.id.BtnChangeProfile);
+
 
         loadImage();
 
@@ -124,6 +124,7 @@ public class StatusFragment extends Fragment {
 
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 setStatus(text, currentUser);
+                setCurrentUserStatus(text, currentUser);
             }
             private void setStatus(String text, ParseUser currentUser) {
                 //create a warning for this user if they test positive
@@ -164,6 +165,12 @@ public class StatusFragment extends Fragment {
             e.printStackTrace();
         }
 
+    }
+
+    private void setCurrentUserStatus(String text, ParseUser currentUser) {
+
+        System.out.println("Set Status");
+        currentUser.put("status", text);
     }
 
     private void loadImage() {
