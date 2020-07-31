@@ -24,7 +24,7 @@
         android:layout_marginTop="11dp"
         android:layout_toEndOf="@+id/ivProfilePic"
         android:textStyle="bold"
-        android:textColor="#626060"
+        android:textColor="@android:color/white"
         android:text="username" />
 
 
@@ -34,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/tvUsername"
+        android:textColor="@android:color/white"
         android:text="Saturday" />
 
     <TextView
@@ -42,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/tvUsername"
+        android:textColor="@android:color/white"
         android:text="Long Beach, CA" />
 
 
@@ -53,7 +55,7 @@
         android:text="Close contact with a person infected with Covid-19"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:textColor="#626060" />
+        android:textColor="@android:color/white" />
 
 
 

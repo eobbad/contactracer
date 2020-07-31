@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp"
+    android:layout_margin="0dp"
     android:orientation="vertical"
     tools:context=".fragments.StatusFragment"
     android:background="@drawable/my_gradient_drawable">
@@ -22,6 +22,7 @@
         android:layout_marginStart="153dp"
         android:layout_marginTop="98dp"
         android:layout_marginEnd="147dp"
+        android:textColor="@android:color/white"
         android:ems="10" />
 
     <ImageView
@@ -67,6 +68,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="11dp"
         android:layout_toEndOf="@+id/ivProfile"
+        android:background="#ff3333"
         android:text="Change Profile Picture" />
 
 
