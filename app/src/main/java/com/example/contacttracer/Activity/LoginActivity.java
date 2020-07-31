@@ -59,12 +59,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void gosignupActivity() {
 
-        Intent i = new Intent(this, SignupActivity.class);
+        Intent i = new Intent(LoginActivity.this, SignupActivity.class);
         startActivity(i);
         finish();
     }
 
     private void loginUser(String username, String password) {
+
         Log.i(TAG, "Attempting to Login user " + username);
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             //
