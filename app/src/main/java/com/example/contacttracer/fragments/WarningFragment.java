@@ -57,6 +57,7 @@ public class WarningFragment extends Fragment {
     }
 
     protected void queryWarnings() {
+
         ParseQuery<Warning> query = ParseQuery.getQuery(Warning.class);
         query.include(Warning.KEY_USER);
         query.setLimit(20);

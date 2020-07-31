@@ -81,22 +81,29 @@ public class HistoryFragment extends Fragment{
                 Double myLat = gpsTracker.getLatitude();
                 Double myLong = gpsTracker.getLongitude();
 
-                System.out.println("Lat: "+myLat + "Long" + myLong);
                 LatLng myLocation = new LatLng(myLat, myLong);
 
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 ParseQuery<ParseUser> query = ParseUser.getQuery();
 
                 final ParseGeoPoint currentLocation = currentUser.getParseGeoPoint("Location");
-                System.out.println("but ehre");
 
                 query.whereNear("Location", currentLocation);
-                System.out.println("Not here");
                 query.findInBackground(new FindCallback<ParseUser>() {
                     @Override  public void done(List<ParseUser> nearUsers, ParseException e) {
                         if (e == null) {
                             // avoiding null pointer
-                            tvMessage.setText("There are " + nearUsers.size() + " users nearby");
+                            String temp = "";
+                            String temp2 = "";
+                            if(nearUsers.size()-1 == 1){
+                                temp = temp + "is";
+                                temp2 = temp2 + "user";
+                            }else{
+                                temp = temp + "are";
+                                temp2 = temp2 + "users";
+                            }
+
+                            tvMessage.setText("WARNING: There "+ temp+ " " + (nearUsers.size()-1) +  " " +temp2+ " nearby");
                             // set the closestUser to the one that isn't the current user
                             for(int i = 0; i < nearUsers.size(); i++) {
 
@@ -105,14 +112,11 @@ public class HistoryFragment extends Fragment{
                                 //if this user is not the current user
                                 if(!thisUser.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
 
-                                    System.out.println("1");
                                     //if this user is within 15 miles(or 24 km) from the current user
                                     if(currentLocation.distanceInKilometersTo(thisUserLocation)<=24.0){
                                         //if this user is infected
-                                        System.out.println("2");
 
                                         if(thisUser.getString("status").equals("Positive")){
-                                            System.out.println("put user");
                                             LatLng thisUserLatLng = new LatLng(thisUserLocation.getLatitude(), thisUserLocation.getLongitude());
                                             googleMap.addMarker(new MarkerOptions().position(thisUserLatLng).icon(BitmapDescriptorFactory
                                                     .defaultMarker(BitmapDescriptorFactory.HUE_RED)));

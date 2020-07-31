@@ -95,6 +95,7 @@ public class StatusFragment extends Fragment {
         tvLocation = view.findViewById(R.id.tvLocation);
         btnChangeProfile = view.findViewById(R.id.BtnChangeProfile);
 
+        String userStatus = currentUser.getString("status");
 
         loadImage();
 
@@ -116,11 +117,14 @@ public class StatusFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sChangeStatus.setAdapter(adapter);
 
+        int spinnerPosition = adapter.getPosition(userStatus);
+        sChangeStatus.setSelection(spinnerPosition);
+
+
         sChangeStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
 
                 String text = parent.getItemAtPosition(position).toString();
-                Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
 
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 setStatus(text, currentUser);
@@ -169,8 +173,12 @@ public class StatusFragment extends Fragment {
 
     private void setCurrentUserStatus(String text, ParseUser currentUser) {
 
-        System.out.println("Set Status");
-        currentUser.put("status", text);
+        if (currentUser != null) {
+            currentUser.put("status", text);
+            currentUser.saveInBackground();
+        } else {
+            // do something like coming back to the login activity
+        }
     }
 
     private void loadImage() {
