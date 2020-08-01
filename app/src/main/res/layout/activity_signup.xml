@@ -30,8 +30,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivLogo"
         android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="133dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="0dp"
         android:background="#B2B1B1"
         android:hint="Username"
         android:textColor="@android:color/black"
@@ -60,7 +63,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
         android:layout_marginStart="1dp"
-        android:layout_marginTop="352dp"
+        android:layout_marginTop="279dp"
         android:text="Sign Up"
         android:textColor="@android:color/white"
         android:textSize="18sp" />
@@ -76,14 +79,14 @@
         android:layout_marginTop="111dp"
         android:layout_marginEnd="36dp"
         android:layout_marginBottom="94dp"
-        android:layout_toStartOf="@+id/btnSignup"
+        android:layout_toStartOf="@+id/btnSign"
         android:background="@android:color/darker_gray"
         android:text="Back"
         android:textColor="@android:color/white"
         android:textSize="30sp" />
 
     <Button
-        android:id="@+id/btnSignup"
+        android:id="@+id/btnSign"
         android:layout_width="151dp"
         android:layout_height="41dp"
         android:layout_below="@+id/etPassword"

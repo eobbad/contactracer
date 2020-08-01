@@ -11,12 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-
 import com.example.contacttracer.GPSTracker;
 import com.example.contacttracer.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,9 +32,7 @@ import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-
 import org.w3c.dom.Text;
-
 import java.util.List;
 
 public class HistoryFragment extends Fragment{
@@ -45,17 +41,14 @@ public class HistoryFragment extends Fragment{
     private MapView mMapView;
     private GoogleMap googleMap;
     private TextView tvMessage;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_posts, container, false)
-
         View view = inflater.inflate(R.layout.fragment_history, container, false);
         mMapView = (MapView) view.findViewById(R.id.mapView);
         tvMessage = (TextView) view.findViewById(R.id.tvMessage);
-
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume(); // needed to get the map to display immediately
         try {
@@ -80,14 +73,10 @@ public class HistoryFragment extends Fragment{
                 GPSTracker gpsTracker = new GPSTracker(getContext());
                 Double myLat = gpsTracker.getLatitude();
                 Double myLong = gpsTracker.getLongitude();
-
                 LatLng myLocation = new LatLng(myLat, myLong);
-
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 ParseQuery<ParseUser> query = ParseUser.getQuery();
-
                 final ParseGeoPoint currentLocation = currentUser.getParseGeoPoint("Location");
-
                 query.whereNear("Location", currentLocation);
                 query.findInBackground(new FindCallback<ParseUser>() {
                     @Override  public void done(List<ParseUser> nearUsers, ParseException e) {
@@ -102,20 +91,16 @@ public class HistoryFragment extends Fragment{
                                 temp = temp + "are";
                                 temp2 = temp2 + "users";
                             }
-
                             tvMessage.setText("WARNING: There "+ temp+ " " + (nearUsers.size()-1) +  " " +temp2+ " nearby");
                             // set the closestUser to the one that isn't the current user
                             for(int i = 0; i < nearUsers.size(); i++) {
-
                                 ParseUser thisUser = nearUsers.get(i);
                                 ParseGeoPoint thisUserLocation = thisUser.getParseGeoPoint("Location");
                                 //if this user is not the current user
                                 if(!thisUser.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
-
                                     //if this user is within 15 miles(or 24 km) from the current user
-                                    if(currentLocation.distanceInKilometersTo(thisUserLocation)<=24.0){
+                                    if(currentLocation.distanceInKilometersTo(thisUserLocation)<=1000.0){
                                         //if this user is infected
-
                                         if(thisUser.getString("status").equals("Positive")){
                                             LatLng thisUserLatLng = new LatLng(thisUserLocation.getLatitude(), thisUserLocation.getLongitude());
                                             googleMap.addMarker(new MarkerOptions().position(thisUserLatLng).icon(BitmapDescriptorFactory
@@ -124,8 +109,6 @@ public class HistoryFragment extends Fragment{
                                     }
                                 }
                             }
-
-
                         } else {
                             Log.d("store", "Error: " + e.getMessage());
                         }
@@ -167,7 +150,6 @@ public class HistoryFragment extends Fragment{
         super.onLowMemory();
         mMapView.onLowMemory();
     }
-
 }
 
 

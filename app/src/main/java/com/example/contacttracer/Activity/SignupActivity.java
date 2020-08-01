@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.contacttracer.R;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
@@ -32,13 +33,14 @@ public class SignupActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
         if (ParseUser.getCurrentUser() != null){
         }
 
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
         backtoLogin = findViewById(R.id.backtoLogin);
-        btnSignup = findViewById(R.id.btnSignup);
+        btnSignup = findViewById(R.id.btnSign);
 
         backtoLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +62,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void goLoginActivity() {
-        Intent i = new Intent(this, LoginActivity.class);
+        Intent i = new Intent(SignupActivity.this, LoginActivity.class);
         startActivity(i);
         finish();
     }
@@ -71,11 +73,15 @@ public class SignupActivity extends AppCompatActivity {
         // Set core properties
         user.setUsername(username);
         user.setPassword(password);
+        ParseGeoPoint loc = new ParseGeoPoint(0.0,0.0);
+
+        user.put("Location", loc);
         user.signUpInBackground(new SignUpCallback() {
             public void done(ParseException e) {
                 if (e == null) {
                     // Hooray! Let them use the app now.
                 } else {
+                    System.out.println(e.toString());
                     // Sign up didn't succeed. Look at the ParseException
                     // to figure out what went wrong
                 }
@@ -104,7 +110,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void goMainActivity() {
-        Intent i = new Intent(this, MainActivity.class);
+        Intent i = new Intent(SignupActivity.this, MainActivity.class);
         startActivity(i);
         finish();
     }
