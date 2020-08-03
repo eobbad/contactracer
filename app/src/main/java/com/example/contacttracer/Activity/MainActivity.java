@@ -13,6 +13,7 @@ import com.example.contacttracer.R;
 import com.example.contacttracer.fragments.HistoryFragment;
 import com.example.contacttracer.fragments.StatusFragment;
 import com.example.contacttracer.fragments.WarningFragment;
+import com.example.contacttracer.models.ContactInfo;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -28,8 +29,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -89,22 +92,52 @@ public class MainActivity extends AppCompatActivity {
                 if (e == null) {
                     // avoiding null pointer
                     // set the closestUser to the one that isn't the current user
-
+                    // intialize hashmap for parse database
+                    HashMap<ParseUser, ContactInfo> map;
+                    //if the map already exists
+                    if(currentUser.get("UserMap") != null){
+                        map = (HashMap<ParseUser, ContactInfo>) currentUser.get("UserMap");
+                    }else {
+                        map = new HashMap<>();
+                    }
+                    //here we will delete all the users who are not valid for display
                     for(int i = 0; i < nearUsers.size(); i++) {
+
+                        Boolean deleted = false;
                         ParseUser thisUser = nearUsers.get(i);
                         ParseGeoPoint thisUserLocation = thisUser.getParseGeoPoint("Location");
+
                         //if this user is the current user remove from arraylist
                         if(thisUser.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
                             nearUsers.remove(i);
-                            //if this user not is within 15 miles(or 24 km) from the current user, remove from list
-                            if(currentLocation.distanceInKilometersTo(thisUserLocation)>1000.0){
+                            deleted = true;
+                        }
+                        //or if this user not is within 15 miles(or 24 km) from the current user, remove from list
+                        if(currentLocation.distanceInKilometersTo(thisUserLocation)>1000.0){
+
+                            if(deleted == false){
                                 nearUsers.remove(i);
+                                deleted = true;
                             }
                         }
+                        //if this user wasn't deleted then we want to add them to the map
+                        if(deleted == false){
+                            //create contact info object with date and location
+                            long now = System.currentTimeMillis();
+                            LatLng myLoc = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                            ContactInfo contactInfo = new ContactInfo(now,myLoc);
+                            //if the user was  already contacted, delete and update
+                            if(map.containsKey(thisUser)){
+                                map.remove(thisUser);
+                                map.put(thisUser,  contactInfo);
+                            }
+
+                        }
+
                     }
-                    //add the users who are 1)not the current user and 2)near the current user to the current user's nearby Users parse array
-                    currentUser.addAllUnique("nearsUser", nearUsers);
+                    currentUser.addAll("contacts", nearUsers);
                     currentUser.saveInBackground();
+
                 } else {
                     Log.d("store", "Error: " + e.getMessage());
                 }
