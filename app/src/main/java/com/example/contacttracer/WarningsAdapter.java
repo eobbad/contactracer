@@ -57,16 +57,29 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
             tvLocation = itemView.findViewById(R.id.tvLocation);
 
 
+
         }
 
         public void bind(Warning warning) {
 
             //for now I will keep the description to same for all warnings
+
             tvDescription.setText(warning.getDescription());
-            tvUsername.setText(warning.getUser().getUsername());
+            System.out.println("1");
+
+            tvUsername.setText(warning.getOtherUser().getUsername());
+            System.out.println("2");
+
             //I will have to do more logic to find the time the two users came in contact
-            tvTimeStamp.setText("Saturday");
+            tvTimeStamp.setText(warning.getCreatedTime());
+            System.out.println("3");
+            String[] address = warning.getLocation().split(",");
+            String city = address[1];
+            tvLocation.setText(city);
+            System.out.println("4");
+
             //tvLocation.setText(warning.getLocation());
+
         }
 
     }

@@ -18,6 +18,7 @@ public class Warning extends ParseObject{
     //I will have to do more logic into finding the user that I come into close contact with
     public static final String KEY_USER = "user";
     public static final String KEY_OTHERUSER = "OtherUser";
+    public static final String KEY_STATUS = "status";
     //Here I am getting the profile picture for the user that I came into close contact with
     public static final String KEY_IMAGE = "image";
     public static final String KEY_LOCATION = "location";
@@ -43,6 +44,12 @@ public class Warning extends ParseObject{
         put(KEY_DESCRIPTION, description);
     }
 
+    public String getStatus(){
+        return (String) get(KEY_STATUS);
+    }
+    public void setStatus(String status){
+        put(KEY_STATUS, status);
+    }
     //temporary method
     public ParseUser getUser(){
         return getParseUser(KEY_USER);
@@ -59,7 +66,7 @@ public class Warning extends ParseObject{
     }
 
     //temporary method
-    public ParseObject getLocation(){return getParseObject(KEY_LOCATION);}
+    public String getLocation(){return getString(KEY_LOCATION);}
     public void setLocation(String location){
         put(KEY_LOCATION, location);
     }

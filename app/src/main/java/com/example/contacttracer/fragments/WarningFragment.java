@@ -60,10 +60,14 @@ public class WarningFragment extends Fragment {
     protected void queryWarnings() {
 
         ParseQuery<Warning> query = ParseQuery.getQuery(Warning.class);
+
         query.include(Warning.KEY_USER);
+        query.include(Warning.KEY_OTHERUSER);
         query.whereEqualTo(Warning.KEY_USER, ParseUser.getCurrentUser());
+        query.whereEqualTo(Warning.KEY_STATUS, "Positive");
         query.setLimit(20);
         query.addDescendingOrder(Warning.KEY_CREATED_AT);
+
         query.findInBackground(new FindCallback<Warning>() {
             @Override
             public void done(List<Warning> warnings, ParseException e) {
@@ -78,5 +82,7 @@ public class WarningFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         });
+
     }
+
 }

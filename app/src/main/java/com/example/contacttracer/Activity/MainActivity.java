@@ -140,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
                             warning.setOtherUser(thisUser);
                             warning.setLocation(getAddress(currentLocation.getLatitude(),currentLocation.getLongitude()));
                             warning.setDescription("Close contact with a person infected with COVID-19");
+                            warning.setStatus((String) thisUser.get("status"));
                             warning.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
