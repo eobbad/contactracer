@@ -2,11 +2,15 @@ package com.example.contacttracer.Activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
+
 import com.example.contacttracer.Activity.LoginActivity;
 import com.example.contacttracer.GPSTracker;
 import com.example.contacttracer.R;
@@ -14,6 +18,7 @@ import com.example.contacttracer.fragments.HistoryFragment;
 import com.example.contacttracer.fragments.StatusFragment;
 import com.example.contacttracer.fragments.WarningFragment;
 import com.example.contacttracer.models.ContactInfo;
+import com.example.contacttracer.models.Warning;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -23,17 +28,21 @@ import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -93,20 +102,21 @@ public class MainActivity extends AppCompatActivity {
                     // avoiding null pointer
                     // set the closestUser to the one that isn't the current user
                     // intialize hashmap for parse database
-                    HashMap<ParseUser, ContactInfo> map;
+                    //HashMap<ParseUser, ContactInfo> map;
                     //if the map already exists
-                    if(currentUser.get("UserMap") != null){
-                        map = (HashMap<ParseUser, ContactInfo>) currentUser.get("UserMap");
-                    }else {
-                        map = new HashMap<>();
-                    }
+                   // if(currentUser.get("UserMap") != null){
+                    //    map = (HashMap<ParseUser, ContactInfo>) currentUser.get("UserMap");
+                   // }else {
+                   //     map = new HashMap<>();
+                   // }
                     //here we will delete all the users who are not valid for display
                     for(int i = 0; i < nearUsers.size(); i++) {
 
+                        //lets us know if the user we are iterating through has been deleted
                         Boolean deleted = false;
+                        //get users location
                         ParseUser thisUser = nearUsers.get(i);
                         ParseGeoPoint thisUserLocation = thisUser.getParseGeoPoint("Location");
-
                         //if this user is the current user remove from arraylist
                         if(thisUser.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
                             nearUsers.remove(i);
@@ -114,27 +124,38 @@ public class MainActivity extends AppCompatActivity {
                         }
                         //or if this user not is within 15 miles(or 24 km) from the current user, remove from list
                         if(currentLocation.distanceInKilometersTo(thisUserLocation)>1000.0){
-
+                            //check if we already deleted this user
                             if(deleted == false){
                                 nearUsers.remove(i);
                                 deleted = true;
                             }
                         }
-                        //if this user wasn't deleted then we want to add them to the map
+                        //if this user wasn't deleted then we want to add them to the hashmap
                         if(deleted == false){
                             //create contact info object with date and location
                             long now = System.currentTimeMillis();
                             LatLng myLoc = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                            ContactInfo contactInfo = new ContactInfo(now,myLoc);
-                            //if the user was  already contacted, delete and update
-                            if(map.containsKey(thisUser)){
-                                map.remove(thisUser);
-                                map.put(thisUser,  contactInfo);
-                            }
-
+                            Warning warning = new Warning();
+                            warning.setUser(currentUser);
+                            warning.setOtherUser(thisUser);
+                            warning.setLocation(getAddress(currentLocation.getLatitude(),currentLocation.getLongitude()));
+                            warning.setDescription("Close contact with a person infected with COVID-19");
+                            warning.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if( e != null){
+                                        Log.e(TAG, "Error while saving", e);
+                                    }
+                                    Log.i(TAG, "Warning save was successful!!");
+                                }
+                            });
                         }
 
                     }
+                    //put the HashMap in Parse
+                    //currentUser.put("UserMap", map);
+                    //currentUser.saveInBackground();
+                    //update the users we came into contact with during this login
                     currentUser.addAll("contacts", nearUsers);
                     currentUser.saveInBackground();
 
@@ -143,6 +164,26 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private String getAddress(double latitude, double longitude) {
+
+        String result = null;
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> list = geocoder.getFromLocation(
+                    latitude, longitude, 1);
+            if (list != null && list.size() > 0) {
+                Address address = list.get(0);
+                // sending back first address line and locality
+
+                result = address.getAddressLine(0) + ", " + address.getLocality();
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Impossible to connect to Geocoder", e);
+        }
+
+        return result;
     }
 
 

@@ -20,6 +20,7 @@ import com.example.contacttracer.WarningsAdapter;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,7 @@ public class WarningFragment extends Fragment {
 
         ParseQuery<Warning> query = ParseQuery.getQuery(Warning.class);
         query.include(Warning.KEY_USER);
+        query.whereEqualTo(Warning.KEY_USER, ParseUser.getCurrentUser());
         query.setLimit(20);
         query.addDescendingOrder(Warning.KEY_CREATED_AT);
         query.findInBackground(new FindCallback<Warning>() {
