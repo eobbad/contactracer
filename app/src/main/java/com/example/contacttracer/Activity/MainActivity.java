@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import com.example.contacttracer.Activity.LoginActivity;
 import com.example.contacttracer.GPSTracker;
@@ -12,6 +13,9 @@ import com.example.contacttracer.R;
 import com.example.contacttracer.fragments.HistoryFragment;
 import com.example.contacttracer.fragments.StatusFragment;
 import com.example.contacttracer.fragments.WarningFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -24,6 +28,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         saveCurrentUserLocation();
+        putNearbyUsers();
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -69,6 +76,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         bottomNavigationView.setSelectedItemId(R.id.action_warning);
+    }
+
+    private void putNearbyUsers() {
+        //add to list of users I came into contact with
+        final ParseUser currentUser = ParseUser.getCurrentUser();
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        final ParseGeoPoint currentLocation = currentUser.getParseGeoPoint("Location");
+        query.whereNear("Location", currentLocation);
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @Override  public void done(List<ParseUser> nearUsers, ParseException e) {
+                if (e == null) {
+                    // avoiding null pointer
+                    // set the closestUser to the one that isn't the current user
+
+                    for(int i = 0; i < nearUsers.size(); i++) {
+                        ParseUser thisUser = nearUsers.get(i);
+                        ParseGeoPoint thisUserLocation = thisUser.getParseGeoPoint("Location");
+                        //if this user is the current user remove from arraylist
+                        if(thisUser.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                            nearUsers.remove(i);
+                            //if this user not is within 15 miles(or 24 km) from the current user, remove from list
+                            if(currentLocation.distanceInKilometersTo(thisUserLocation)>1000.0){
+                                nearUsers.remove(i);
+                            }
+                        }
+                    }
+                    //add the users who are 1)not the current user and 2)near the current user to the current user's nearby Users parse array
+                    currentUser.addAllUnique("nearsUser", nearUsers);
+                    currentUser.saveInBackground();
+                } else {
+                    Log.d("store", "Error: " + e.getMessage());
+                }
+            }
+        });
     }
 
 

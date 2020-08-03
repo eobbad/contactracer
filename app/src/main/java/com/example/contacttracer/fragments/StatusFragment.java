@@ -95,7 +95,7 @@ public class StatusFragment extends Fragment {
         tvLocation = view.findViewById(R.id.tvLocation);
         btnChangeProfile = view.findViewById(R.id.BtnChangeProfile);
 
-        String userStatus = currentUser.getString("status");
+        final String userStatus = currentUser.getString("status");
 
         loadImage();
 
@@ -127,8 +127,10 @@ public class StatusFragment extends Fragment {
                 String text = parent.getItemAtPosition(position).toString();
 
                 ParseUser currentUser = ParseUser.getCurrentUser();
-                setStatus(text, currentUser);
-                setCurrentUserStatus(text, currentUser);
+                if(!text.equals(userStatus)) {
+                    setStatus(text, currentUser);
+                    setCurrentUserStatus(text, currentUser);
+                }
             }
             private void setStatus(String text, ParseUser currentUser) {
                 //create a warning for this user if they test positive
