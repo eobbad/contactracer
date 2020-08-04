@@ -8,14 +8,11 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
-
 import com.example.contacttracer.R;
 import com.example.contacttracer.models.Warning;
 import com.example.contacttracer.WarningsAdapter;
@@ -23,13 +20,10 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class WarningFragment extends Fragment {
-
     public static final String TAG = "WarningFragment";
     private RecyclerView rvWarnings;
     protected WarningsAdapter adapter;
@@ -57,15 +51,12 @@ public class WarningFragment extends Fragment {
         rvWarnings.setAdapter(adapter);
         rvWarnings.setLayoutManager(new LinearLayoutManager(getContext()));
         queryWarnings();
-
-
     }
 
 
     protected void queryWarnings() {
 
         ParseQuery<Warning> query = ParseQuery.getQuery(Warning.class);
-
         query.include(Warning.KEY_USER);
         query.include(Warning.KEY_OTHERUSER);
         query.include(Warning.KEY_STATUS);
@@ -73,7 +64,6 @@ public class WarningFragment extends Fragment {
         query.whereEqualTo(Warning.KEY_STATUS, "Positive");
         query.setLimit(20);
         query.addDescendingOrder(Warning.KEY_CREATED_AT);
-
         query.findInBackground(new FindCallback<Warning>() {
             @Override
             public void done(List<Warning> warnings, ParseException e) {
@@ -88,7 +78,5 @@ public class WarningFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         });
-
     }
-
 }

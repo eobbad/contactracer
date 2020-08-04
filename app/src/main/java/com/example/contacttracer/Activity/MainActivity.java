@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import com.example.contacttracer.Activity.LoginActivity;
 import com.example.contacttracer.GPSTracker;
 import com.example.contacttracer.R;
@@ -31,13 +30,11 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -45,7 +42,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_LOCATION = 1;
@@ -101,10 +97,8 @@ public class MainActivity extends AppCompatActivity {
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override  public void done(List<ParseUser> nearUsers, ParseException e) {
                 if (e == null) {
-
                     int k = nearUsers.size();
                     for(int i = nearUsers.size()-1; i >= 0; i--) {
-
                         //lets us know if the user we are iterating through has been deleted
                         Boolean deleted = false;
                         //get users location
@@ -124,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
                                 nearUsers.remove(i);
                                 deleted = true;
                                 System.out.println(thisUser.getUsername() + "failed not near");
-
                             }
                         }
                         //if this user wasn't deleted then we want to add them to the hashmap

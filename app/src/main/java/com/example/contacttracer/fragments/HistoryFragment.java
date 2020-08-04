@@ -1,5 +1,4 @@
 package com.example.contacttracer.fragments;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
@@ -36,7 +35,6 @@ import org.w3c.dom.Text;
 import java.util.List;
 
 public class HistoryFragment extends Fragment{
-
     //I have to use a mapView instead of a
     private MapView mMapView;
     private GoogleMap googleMap;
@@ -63,8 +61,6 @@ public class HistoryFragment extends Fragment{
                 // For showing a move to my location button
                 //permission check
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-                    System.out.println("map not accessbile");
                     return;
                 }
                 googleMap.setMyLocationEnabled(true);
@@ -88,7 +84,6 @@ public class HistoryFragment extends Fragment{
                             int count = 0;
                             String temp = "";
                             String temp2 = "";
-
                             // set the closestUser to the one that isn't the current user
                             for(int i = 0; i < nearUsers.size(); i++) {
                                 ParseUser thisUser = nearUsers.get(i);
@@ -108,7 +103,6 @@ public class HistoryFragment extends Fragment{
                                     }
                                 }
                             }
-
                             if(count == 1){
                                 temp = temp + "is";
                                 temp2 = temp2 + "user";
@@ -130,7 +124,6 @@ public class HistoryFragment extends Fragment{
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
-
         // Lookup the swipe container view
         return view;
     }

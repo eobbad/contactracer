@@ -4,6 +4,8 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="map_key" translatable="false">AIzaSyAETitn22FMIFA2f991-nQAVrz4BtyCBQI</string>
+    <string name="warning_message">Close contact with a person infected with COVID-19</string>
+
 
     <string-array name="status">
         <item>Negative</item>

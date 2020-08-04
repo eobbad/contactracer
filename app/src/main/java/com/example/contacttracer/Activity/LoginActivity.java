@@ -12,17 +12,14 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
-
-public class LoginActivity extends AppCompatActivity {
+public class
+LoginActivity extends AppCompatActivity {
 
     public static final String TAG = "LoginActivity";
-
     private EditText etUsername;
     private EditText etPassword;
-
     private Button btnLogin;
     private Button btnSignup;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,12 +27,10 @@ public class LoginActivity extends AppCompatActivity {
         if (ParseUser.getCurrentUser() != null){
            // goMainActivity();
         }
-
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
         btnSignup = findViewById(R.id.btnSignup);
-
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,7 +40,6 @@ public class LoginActivity extends AppCompatActivity {
                 loginUser(username, password);
             }
         });
-
         btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,14 +52,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void gosignupActivity() {
-
         Intent i = new Intent(LoginActivity.this, SignupActivity.class);
         startActivity(i);
         finish();
     }
 
     private void loginUser(String username, String password) {
-
         Log.i(TAG, "Attempting to Login user " + username);
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             //

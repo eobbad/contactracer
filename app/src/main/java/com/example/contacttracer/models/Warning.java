@@ -1,20 +1,16 @@
 package com.example.contacttracer.models;
-
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
 //each warning will have the name and profile picture of the person who's infected
 //it will also have the location of the meeting
 @ParseClassName("Warning")
 public class Warning extends ParseObject{
-
     //I will have to do more logic into finding the user that I come into close contact with
     public static final String KEY_USER = "user";
     public static final String KEY_OTHERUSER = "OtherUser";

@@ -17,9 +17,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import static android.app.Activity.RESULT_OK;
-
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -34,7 +32,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.example.contacttracer.GPSTracker;
 import com.example.contacttracer.R;
@@ -64,14 +61,10 @@ public class StatusFragment extends Fragment {
     private TextView tvUsername;
     private TextView tvLocation;
     private Button btnChangeProfile;
-
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     public static final int REQUEST_CODE = 43;
-
-
     private File photoFile;
     public String photoFileName = "photo.jpg";
-
     public StatusFragment() {
         // Required empty public constructor
     }
@@ -88,7 +81,6 @@ public class StatusFragment extends Fragment {
 
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
-
         super.onViewCreated(view, savedInstanceState);
         //for now I will only have "positive" and "negative" options
         sChangeStatus = view.findViewById(R.id.sChangeStatus);
@@ -96,11 +88,8 @@ public class StatusFragment extends Fragment {
         tvUsername = view.findViewById(R.id.tvUsername);
         tvLocation = view.findViewById(R.id.tvLocation);
         btnChangeProfile = view.findViewById(R.id.BtnChangeProfile);
-
         final String userStatus = currentUser.getString("status");
-
         loadImage();
-
         btnChangeProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,66 +107,36 @@ public class StatusFragment extends Fragment {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.status, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sChangeStatus.setAdapter(adapter);
-
         int spinnerPosition = adapter.getPosition(userStatus);
         sChangeStatus.setSelection(spinnerPosition);
-
-
         sChangeStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
 
                 String text = parent.getItemAtPosition(position).toString();
-
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 if(!text.equals(userStatus)) {
                     //setStatus(text, currentUser);
                     setCurrentUserStatus(text, currentUser);
                 }
             }
-            /*
-            private void setStatus(String text, ParseUser currentUser) {
-                //create a warning for this user if they test positive
-                Warning warning = new Warning();
-                //for now this is hard-coded, might add length of interaction as stretch feature
-                warning.setDescription("Close contact with a person infected with COVID-19");
-                //hardcoded, will get location from maps sdk
-                warning.setLocation("Manhattan Beach, CA");
-                warning.setUser(currentUser);
-               // warning.setImage(null);
-                warning.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if( e != null){
-                            Log.e(TAG, "Error while saving", e);
-                            Toast.makeText(getContext(), "Error while saving!", Toast.LENGTH_SHORT).show();
-                        }
-                        Log.i(TAG, "Warning save was successful!!");
-                    }
-                });
-            }
-*/
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
         tvUsername.setText(ParseUser.getCurrentUser().getUsername());
-
         GPSTracker gpsTracker = new GPSTracker(getContext());
         Double myLat = gpsTracker.getLatitude();
         Double myLong = gpsTracker.getLongitude();
-
         try {
             System.out.println(getCityName(myLat, myLong));
             tvLocation.setText(getCityName(myLat,myLong));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     private void setCurrentUserStatus(String text, ParseUser currentUser) {
-
         if (currentUser != null) {
             currentUser.put("status", text);
             currentUser.saveInBackground();
@@ -185,7 +144,6 @@ public class StatusFragment extends Fragment {
             // do something like coming back to the login activity
         }
         //if they set their status to negative, remove all warnings concering them
-
         ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Warning");
         query1.whereEqualTo("OtherUser", currentUser);
         query1.getFirstInBackground(new GetCallback<ParseObject>() {
@@ -213,7 +171,6 @@ public class StatusFragment extends Fragment {
     private void loadImage() {
 
         ParseFile image = currentUser.getParseFile("Image");
-
         if(image != null){
             Glide.with(getContext()).load(image.getUrl()).into(ivProfile);
         }
@@ -235,13 +192,11 @@ public class StatusFragment extends Fragment {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Create a File reference for future access
         photoFile = getPhotoFileUri(photoFileName);
-
         // wrap File object into a content provider
         // required for API >= 24
         // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
         Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider.contactracer", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-
         // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
         // So as long as the result is not null, it's safe to use the intent.
         if (intent.resolveActivity(getContext().getPackageManager()) != null) {
@@ -256,15 +211,12 @@ public class StatusFragment extends Fragment {
         // Use `getExternalFilesDir` on Context to access package-specific directories.
         // This way, we don't need to request external read/write runtime permissions.
         File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
-
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
             Log.d(TAG, "failed to create directory");
         }
-
         // Return the file target for the photo based on filename
         File file = new File(mediaStorageDir.getPath() + File.separator + fileName);
-
         return file;
     }
 
@@ -282,6 +234,7 @@ public class StatusFragment extends Fragment {
             }
         }
     }
+
     public String getCityName(Double latitude, Double longitude) throws IOException {
 
         String result = null;
@@ -292,14 +245,11 @@ public class StatusFragment extends Fragment {
             if (list != null && list.size() > 0) {
                 Address address = list.get(0);
                 // sending back first address line and locality
-
                 result = address.getAddressLine(0) + ", " + address.getLocality();
             }
         } catch (IOException e) {
             Log.e(TAG, "Impossible to connect to Geocoder", e);
         }
-
         return result;
     }
-
 }
