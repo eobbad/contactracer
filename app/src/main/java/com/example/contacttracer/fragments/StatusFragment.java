@@ -190,14 +190,22 @@ public class StatusFragment extends Fragment {
         query1.whereEqualTo("OtherUser", currentUser);
         query1.getFirstInBackground(new GetCallback<ParseObject>() {
             public void done(ParseObject object, ParseException e) {
+                Boolean objectNull;
+                if(object == null){
+                    objectNull = true;
+                }else{
+                    objectNull = false;
+                }
                 try {
-                    if(object != null) {
+                    if(!objectNull) {
                         object.delete();
                     }
                 } catch (ParseException ex) {
                     ex.printStackTrace();
                 }
-                object.saveInBackground();
+                if(!objectNull) {
+                    object.saveInBackground();
+                }
             }
         });
     }

@@ -85,16 +85,10 @@ public class HistoryFragment extends Fragment{
                         System.out.println(nearUsers);
                         if (e == null) {
                             // avoiding null pointer
+                            int count = 0;
                             String temp = "";
                             String temp2 = "";
-                            if(nearUsers.size()-1 == 1){
-                                temp = temp + "is";
-                                temp2 = temp2 + "user";
-                            }else{
-                                temp = temp + "are";
-                                temp2 = temp2 + "users";
-                            }
-                            tvMessage.setText("WARNING: There "+ temp+ " " + (nearUsers.size()-1) +  " " +temp2+ " nearby");
+
                             // set the closestUser to the one that isn't the current user
                             for(int i = 0; i < nearUsers.size(); i++) {
                                 ParseUser thisUser = nearUsers.get(i);
@@ -103,9 +97,9 @@ public class HistoryFragment extends Fragment{
                                 if(!thisUser.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
                                     //if this user is within 15 miles(or 24 km) from the current user
                                     if(currentLocation.distanceInKilometersTo(thisUserLocation)<=1000.0){
-                                        System.out.println("got here");
                                         //if this user is infected
                                         if(thisUser.getString("status").equals("Positive")){
+                                            count++;
                                             LatLng thisUserLatLng = new LatLng(thisUserLocation.getLatitude(), thisUserLocation.getLongitude());
                                             System.out.println(thisUserLatLng.latitude + ", " + thisUserLatLng.longitude);
                                             googleMap.addMarker(new MarkerOptions().position(thisUserLatLng).icon(BitmapDescriptorFactory
@@ -114,6 +108,16 @@ public class HistoryFragment extends Fragment{
                                     }
                                 }
                             }
+
+                            if(count == 1){
+                                temp = temp + "is";
+                                temp2 = temp2 + "user";
+                            }else{
+                                temp = temp + "are";
+                                temp2 = temp2 + "users";
+                            }
+                            tvMessage.setText("There "+ temp+ " " + count +  " infected " +temp2+ " nearby");
+
                         } else {
                             Log.d("store", "Error: " + e.getMessage());
                         }

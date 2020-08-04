@@ -102,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
             @Override  public void done(List<ParseUser> nearUsers, ParseException e) {
                 if (e == null) {
 
-                    List<Integer> rem = new ArrayList<>();
-                    for(int i = nearUsers.size()-1; i > 0; i--) {
+                    int k = nearUsers.size();
+                    for(int i = nearUsers.size()-1; i >= 0; i--) {
 
                         //lets us know if the user we are iterating through has been deleted
                         Boolean deleted = false;
