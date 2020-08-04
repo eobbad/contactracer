@@ -102,17 +102,20 @@ public class MainActivity extends AppCompatActivity {
             @Override  public void done(List<ParseUser> nearUsers, ParseException e) {
                 if (e == null) {
 
-                    for(int i = 0; i < nearUsers.size(); i++) {
+                    List<Integer> rem = new ArrayList<>();
+                    for(int i = nearUsers.size()-1; i > 0; i--) {
 
                         //lets us know if the user we are iterating through has been deleted
                         Boolean deleted = false;
                         //get users location
                         ParseUser thisUser = nearUsers.get(i);
+                        System.out.println(thisUser.getUsername());
                         ParseGeoPoint thisUserLocation = thisUser.getParseGeoPoint("Location");
                         //if this user is the current user remove from arraylist
                         if(thisUser.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
                             nearUsers.remove(i);
                             deleted = true;
+                            System.out.println(thisUser.getUsername() + " is current");
                         }
                         //or if this user not is within 15 miles(or 24 km) from the current user, remove from list
                         if(currentLocation.distanceInKilometersTo(thisUserLocation)>1000.0){
@@ -120,27 +123,40 @@ public class MainActivity extends AppCompatActivity {
                             if(deleted == false){
                                 nearUsers.remove(i);
                                 deleted = true;
+                                System.out.println(thisUser.getUsername() + "failed not near");
+
                             }
                         }
                         //if this user wasn't deleted then we want to add them to the hashmap
                         if(deleted == false){
+                            System.out.println(thisUser.getUsername() + " made it");
+
                             //create contact info object with date and location
                             // delete previous warning with this user
                             ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Warning");
                             query1.whereEqualTo("OtherUser", thisUser);
                             query1.getFirstInBackground(new GetCallback<ParseObject>() {
                                 public void done(ParseObject object, ParseException e) {
+
+                                    Boolean objectNull;
+                                    if(object == null){
+                                        objectNull = true;
+                                    }else{
+                                        objectNull = false;
+                                    }
                                     try {
-                                        if(object != null) {
+                                        if(!objectNull) {
                                             object.delete();
                                         }
                                     } catch (ParseException ex) {
                                         ex.printStackTrace();
                                     }
-                                    object.saveInBackground();
+                                    if(!objectNull) {
+                                        object.saveInBackground();
+                                    }
                                 }
                             });
-
+                            //System.out.println("4");
                             //Then save the new Warning
                             Warning warning = new Warning();
                             warning.setUser(currentUser);

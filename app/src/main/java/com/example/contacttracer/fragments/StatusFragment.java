@@ -40,8 +40,10 @@ import com.example.contacttracer.GPSTracker;
 import com.example.contacttracer.R;
 import com.example.contacttracer.models.Warning;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -128,10 +130,11 @@ public class StatusFragment extends Fragment {
 
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 if(!text.equals(userStatus)) {
-                    setStatus(text, currentUser);
+                    //setStatus(text, currentUser);
                     setCurrentUserStatus(text, currentUser);
                 }
             }
+            /*
             private void setStatus(String text, ParseUser currentUser) {
                 //create a warning for this user if they test positive
                 Warning warning = new Warning();
@@ -152,7 +155,7 @@ public class StatusFragment extends Fragment {
                     }
                 });
             }
-
+*/
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -181,6 +184,22 @@ public class StatusFragment extends Fragment {
         } else {
             // do something like coming back to the login activity
         }
+        //if they set their status to negative, remove all warnings concering them
+
+        ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Warning");
+        query1.whereEqualTo("OtherUser", currentUser);
+        query1.getFirstInBackground(new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                try {
+                    if(object != null) {
+                        object.delete();
+                    }
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }
+                object.saveInBackground();
+            }
+        });
     }
 
     private void loadImage() {
