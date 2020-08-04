@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.contacttracer.models.Warning;
@@ -31,6 +33,13 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         Warning warning = warnings.get(position);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "Clicked card", Toast.LENGTH_SHORT).show();
+            }
+        });
         holder.bind(warning);
     }
 
@@ -63,6 +72,7 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
         public void bind(Warning warning) {
 
             //for now I will keep the description to same for all warnings
+
 
             tvDescription.setText(warning.getDescription());
             System.out.println("1");
