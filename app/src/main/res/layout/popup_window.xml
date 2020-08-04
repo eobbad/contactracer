@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rvPopUp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#a9c8ef">
+    android:background="#c2c2d6">
 
     <ImageView
         android:id="@+id/ivProfilePic"

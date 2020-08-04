@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -13,7 +14,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.example.contacttracer.models.Warning;
+import com.parse.ParseFile;
+import com.parse.ParseUser;
+
 import java.util.List;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
@@ -23,6 +29,11 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
 
     private Context context;
     private List<Warning> warnings;
+
+    private ImageView ivProfilePicture;
+    private TextView tvUser;
+    private TextView tvTime;
+    private TextView tvLoc;
 
     public WarningsAdapter(Context context, List<Warning> warnings){
         this.context = context;
@@ -39,7 +50,8 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        Warning warning = warnings.get(position);
+
+        final Warning warning = warnings.get(position);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +69,24 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
                 // show the popup window
                 // which view you pass in doesn't matter, it is only used for the window tolken
                 popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
+                tvLoc =popupView.findViewById(R.id.tvLoc);
+                tvUser =popupView.findViewById(R.id.tvUsername);
+                tvTime =popupView.findViewById(R.id.tvTime);
+                ivProfilePicture =popupView.findViewById(R.id.ivProfilePic);
+
+                ParseUser thisUser = warning.getOtherUser();
+                ParseFile image = thisUser.getParseFile("Image");
+                if(image != null){
+                    Glide.with(context).load(image.getUrl()).into(ivProfilePicture);
+                }
+                tvUser.setText(warning.getOtherUser().getUsername());
+                tvTime.setText(warning.getCreatedTime());
+                String[] address = warning.getLocation().split(",");
+                String city = address[1];
+                tvLoc.setText(city);
+
+
 
                 // dismiss the popup window when touched
                 popupView.setOnTouchListener(new View.OnTouchListener() {
@@ -103,18 +133,11 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
 
 
             tvDescription.setText(warning.getDescription());
-            System.out.println("1");
-
             tvUsername.setText(warning.getOtherUser().getUsername());
-            System.out.println("2");
-
-            //I will have to do more logic to find the time the two users came in contact
             tvTimeStamp.setText(warning.getCreatedTime());
-            System.out.println("3");
             String[] address = warning.getLocation().split(",");
             String city = address[1];
             tvLocation.setText(city);
-            System.out.println("4");
 
             //tvLocation.setText(warning.getLocation());
 
