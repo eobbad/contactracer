@@ -63,6 +63,7 @@ public class WarningFragment extends Fragment {
 
         query.include(Warning.KEY_USER);
         query.include(Warning.KEY_OTHERUSER);
+        query.include(Warning.KEY_STATUS);
         query.whereEqualTo(Warning.KEY_USER, ParseUser.getCurrentUser());
         query.whereEqualTo(Warning.KEY_STATUS, "Positive");
         query.setLimit(20);

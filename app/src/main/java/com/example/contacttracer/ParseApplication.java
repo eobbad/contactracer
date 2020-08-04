@@ -3,6 +3,7 @@ import android.app.Application;
 import com.example.contacttracer.models.Warning;
 import com.parse.Parse;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 public class ParseApplication extends Application {
 
@@ -18,5 +19,6 @@ public class ParseApplication extends Application {
                 .applicationId("contactracer") // should correspond to APP_ID env variable
                 .clientKey("GeraltofRivia!")  // set explicitly unless clientKey is explicitly configured on Parse server
                 .server("https://contactracer.herokuapp.com/parse").build());
+        ParseUser.enableRevocableSessionInBackground();
     }
 }

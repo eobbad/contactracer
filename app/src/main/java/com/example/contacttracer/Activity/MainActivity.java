@@ -24,8 +24,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -99,17 +101,7 @@ public class MainActivity extends AppCompatActivity {
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override  public void done(List<ParseUser> nearUsers, ParseException e) {
                 if (e == null) {
-                    // avoiding null pointer
-                    // set the closestUser to the one that isn't the current user
-                    // intialize hashmap for parse database
-                    //HashMap<ParseUser, ContactInfo> map;
-                    //if the map already exists
-                   // if(currentUser.get("UserMap") != null){
-                    //    map = (HashMap<ParseUser, ContactInfo>) currentUser.get("UserMap");
-                   // }else {
-                   //     map = new HashMap<>();
-                   // }
-                    //here we will delete all the users who are not valid for display
+
                     for(int i = 0; i < nearUsers.size(); i++) {
 
                         //lets us know if the user we are iterating through has been deleted
@@ -133,8 +125,23 @@ public class MainActivity extends AppCompatActivity {
                         //if this user wasn't deleted then we want to add them to the hashmap
                         if(deleted == false){
                             //create contact info object with date and location
-                            long now = System.currentTimeMillis();
-                            LatLng myLoc = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                            // delete previous warning with this user
+                            ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Warning");
+                            query1.whereEqualTo("OtherUser", thisUser);
+                            query1.getFirstInBackground(new GetCallback<ParseObject>() {
+                                public void done(ParseObject object, ParseException e) {
+                                    try {
+                                        if(object != null) {
+                                            object.delete();
+                                        }
+                                    } catch (ParseException ex) {
+                                        ex.printStackTrace();
+                                    }
+                                    object.saveInBackground();
+                                }
+                            });
+
+                            //Then save the new Warning
                             Warning warning = new Warning();
                             warning.setUser(currentUser);
                             warning.setOtherUser(thisUser);
@@ -153,9 +160,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                     }
-                    //put the HashMap in Parse
-                    //currentUser.put("UserMap", map);
-                    //currentUser.saveInBackground();
+
                     //update the users we came into contact with during this login
                     currentUser.addAll("contacts", nearUsers);
                     currentUser.saveInBackground();

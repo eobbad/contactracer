@@ -74,12 +74,15 @@ public class HistoryFragment extends Fragment{
                 Double myLat = gpsTracker.getLatitude();
                 Double myLong = gpsTracker.getLongitude();
                 LatLng myLocation = new LatLng(myLat, myLong);
-                ParseUser currentUser = ParseUser.getCurrentUser();
+                final ParseUser currentUser = ParseUser.getCurrentUser();
                 ParseQuery<ParseUser> query = ParseUser.getQuery();
                 final ParseGeoPoint currentLocation = currentUser.getParseGeoPoint("Location");
                 query.whereNear("Location", currentLocation);
                 query.findInBackground(new FindCallback<ParseUser>() {
+
                     @Override  public void done(List<ParseUser> nearUsers, ParseException e) {
+                        System.out.println(currentUser.getUsername());
+                        System.out.println(nearUsers);
                         if (e == null) {
                             // avoiding null pointer
                             String temp = "";
@@ -100,9 +103,11 @@ public class HistoryFragment extends Fragment{
                                 if(!thisUser.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
                                     //if this user is within 15 miles(or 24 km) from the current user
                                     if(currentLocation.distanceInKilometersTo(thisUserLocation)<=1000.0){
+                                        System.out.println("got here");
                                         //if this user is infected
                                         if(thisUser.getString("status").equals("Positive")){
                                             LatLng thisUserLatLng = new LatLng(thisUserLocation.getLatitude(), thisUserLocation.getLongitude());
+                                            System.out.println(thisUserLatLng.latitude + ", " + thisUserLatLng.longitude);
                                             googleMap.addMarker(new MarkerOptions().position(thisUserLatLng).icon(BitmapDescriptorFactory
                                                     .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
                                         }
