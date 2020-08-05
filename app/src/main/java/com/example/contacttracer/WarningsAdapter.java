@@ -53,9 +53,9 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
 
         final Warning warning = warnings.get(position);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onLongClick(View view) {
                 Toast.makeText(context, "Clicked card", Toast.LENGTH_SHORT).show();
                 LayoutInflater inflater = (LayoutInflater)
                         context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
@@ -96,6 +96,7 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
                         return true;
                     }
                 });
+                return true;
             }
         });
         holder.bind(warning);
