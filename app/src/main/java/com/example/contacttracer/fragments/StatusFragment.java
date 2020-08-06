@@ -33,6 +33,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.contacttracer.GPSTracker;
 import com.example.contacttracer.R;
 import com.example.contacttracer.models.Warning;
@@ -172,7 +173,7 @@ public class StatusFragment extends Fragment {
 
         ParseFile image = currentUser.getParseFile("Image");
         if(image != null){
-            Glide.with(getContext()).load(image.getUrl()).into(ivProfile);
+            Glide.with(getContext()).load(image.getUrl()).transform(new CircleCrop()).into(ivProfile);
         }
     }
 

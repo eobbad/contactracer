@@ -16,7 +16,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.contacttracer.models.Warning;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
@@ -34,6 +37,7 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
     private TextView tvUser;
     private TextView tvTime;
     private TextView tvLoc;
+
 
     public WarningsAdapter(Context context, List<Warning> warnings){
         this.context = context;
@@ -71,6 +75,8 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
                 // which view you pass in doesn't matter, it is only used for the window tolken
                 popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
+
+
                 tvLoc =popupView.findViewById(R.id.tvLoc);
                 tvUser =popupView.findViewById(R.id.tvUsername);
                 tvTime =popupView.findViewById(R.id.tvTime);
@@ -79,7 +85,7 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
                 ParseUser thisUser = warning.getOtherUser();
                 ParseFile image = thisUser.getParseFile("Image");
                 if(image != null){
-                    Glide.with(context).load(image.getUrl()).into(ivProfilePicture);
+                    Glide.with(context).load(image.getUrl()).transform(new CircleCrop()).into(ivProfilePicture);
                 }
                 tvUser.setText(warning.getOtherUser().getUsername());
                 tvTime.setText(warning.getCreatedTime());

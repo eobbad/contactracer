@@ -5,7 +5,7 @@
     android:id="@+id/rvPopUp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#c2c2d6">
+    android:background="#666666">
 
     <ImageView
         android:id="@+id/ivProfilePic"
@@ -53,5 +53,6 @@
         android:hint="Saturday"
         android:textColor="@android:color/white"
         android:textSize="22sp" />
+
 
 </RelativeLayout>
