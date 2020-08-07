@@ -56,6 +56,7 @@ public class WarningFragment extends Fragment {
 
     protected void queryWarnings() {
 
+        //query warnings for users who test only positive
         ParseQuery<Warning> query = ParseQuery.getQuery(Warning.class);
         query.include(Warning.KEY_USER);
         query.include(Warning.KEY_OTHERUSER);
@@ -78,5 +79,32 @@ public class WarningFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         });
+
+        //query warnings for users who are negative but came into contact with someone who is positive
+
+        ParseQuery<Warning> query1 = ParseQuery.getQuery(Warning.class);
+        query1.include(Warning.KEY_USER);
+        query1.include(Warning.KEY_OTHERUSER);
+        query1.include(Warning.KEY_STATUS);
+        query1.whereEqualTo(Warning.KEY_USER, ParseUser.getCurrentUser());
+        query1.whereEqualTo(Warning.KEY_STATUS, "Negative");
+        query1.whereEqualTo(Warning.KEY_COLOR, "yellow");
+        query1.setLimit(20);
+        query1.addDescendingOrder(Warning.KEY_CREATED_AT);
+        query1.findInBackground(new FindCallback<Warning>() {
+            @Override
+            public void done(List<Warning> warnings, ParseException e) {
+                if(e != null){
+                    Log.e(TAG, "issue with getting warnings", e);
+                    return;
+                }
+                for (Warning warning : warnings){
+                    Log.i(TAG, "Warning: " + ", username: ");
+                }
+                allWarnings.addAll(warnings);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
     }
 }

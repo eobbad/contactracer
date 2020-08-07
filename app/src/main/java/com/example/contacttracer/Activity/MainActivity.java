@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void putNearbyUsers() {
+        Boolean cameIntoContact = false;
         //add to list of users I came into contact with
         final ParseUser currentUser = ParseUser.getCurrentUser();
         ParseQuery<ParseUser> query = ParseUser.getQuery();
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
             @Override  public void done(List<ParseUser> nearUsers, ParseException e) {
                 if (e == null) {
                     int k = nearUsers.size();
+                    int countContact = 0;
                     for(int i = nearUsers.size()-1; i >= 0; i--) {
                         //lets us know if the user we are iterating through has been deleted
                         Boolean deleted = false;
@@ -157,6 +159,19 @@ public class MainActivity extends AppCompatActivity {
                             warning.setLocation(getAddress(currentLocation.getLatitude(),currentLocation.getLongitude()));
                             warning.setDescription("Close contact with a person infected with COVID-19");
                             warning.setStatus((String) thisUser.get("status"));
+                            //if i came into contact with an infected user, set my contact to "yes", otherwise set it to no.
+                            if(((String) thisUser.get("status")).equals("Positive")){
+                                warning.setColor("red");
+                                countContact++;
+                            }else{
+                                if(thisUser.get("Contact")!=null) {
+                                    if (thisUser.get("Contact").equals("yes")) {
+                                        warning.setColor("yellow");
+                                    }
+                                }
+                            }
+
+
                             warning.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
@@ -171,6 +186,12 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     //update the users we came into contact with during this login
+                    //if i came into contact with an infected user, set my contact to "yes", otherwise set it to no.
+                    if(countContact >0){
+                        currentUser.put("Contact", "yes");
+                    }else{
+                        currentUser.put("Contact", "no");
+                    }
                     currentUser.addAll("contacts", nearUsers);
                     currentUser.saveInBackground();
 

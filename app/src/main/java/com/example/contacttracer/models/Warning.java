@@ -15,6 +15,7 @@ public class Warning extends ParseObject{
     public static final String KEY_USER = "user";
     public static final String KEY_OTHERUSER = "OtherUser";
     public static final String KEY_STATUS = "status";
+    public static final String KEY_COLOR = "Color";
     //Here I am getting the profile picture for the user that I came into close contact with
     public static final String KEY_IMAGE = "image";
     public static final String KEY_LOCATION = "location";
@@ -46,7 +47,14 @@ public class Warning extends ParseObject{
     public void setStatus(String status){
         put(KEY_STATUS, status);
     }
-    //temporary method
+
+    public String getColor(){
+        return (String) get(KEY_COLOR);
+    }
+    public void setColor(String color){
+        put(KEY_COLOR, color);
+    }
+
     public ParseUser getUser(){
         return getParseUser(KEY_USER);
     }

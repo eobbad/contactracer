@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -60,7 +61,6 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Toast.makeText(context, "Clicked card", Toast.LENGTH_SHORT).show();
                 LayoutInflater inflater = (LayoutInflater)
                         context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
                 View popupView = inflater.inflate(R.layout.popup_window, null);
@@ -118,6 +118,7 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder implements com.example.contacttracer.ViewHolder {
 
+        private CardView cardView;
         private TextView tvUsername;
         private TextView tvDescription;
         private TextView tvTimeStamp;
@@ -126,6 +127,7 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
         public ViewHolder(@NonNull View itemView) {
 
             super(itemView);
+            cardView = itemView.findViewById(R.id.card_view);
             tvUsername = itemView.findViewById(R.id.tvUsername);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvTimeStamp = itemView.findViewById(R.id.tvTimeStamp);
@@ -138,8 +140,13 @@ public class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.ViewHo
         public void bind(Warning warning) {
 
             //for now I will keep the description to same for all warnings
-
-
+            if(warning.getColor() != null) {
+                if (warning.getColor().equals("red")) {
+                    cardView.setCardBackgroundColor(Color.RED);
+                } else {
+                    cardView.setCardBackgroundColor(Color.YELLOW);
+                }
+            }
             tvDescription.setText(warning.getDescription());
             tvUsername.setText(warning.getOtherUser().getUsername());
             tvTimeStamp.setText(warning.getCreatedTime());
